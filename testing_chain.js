@@ -45,9 +45,28 @@ function Testing(){
         queue.add(fn, self.state);
         return self;
     }
+    
+    this.task = function(task){
+        function fn(state){ 
+            task.call(self, state);
+            queue.done(state); 
+        }
+        queue.add(fn, self.state);
+        return self;
+    }
 }
 
 var test = new Testing();
-test.onesec().nsecs(3).onesec().logtime().logselftime();
+test.onesec()
+    .nsecs(3)
+    .task(function(state){ 
+        state.hello = "world";
+    })
+    .onesec()
+    .logtime()
+    .logselftime()
+    .task(function(state){ 
+        console.log("state.hello = "+state.hello);
+    });
 
 module.exports = Testing;
