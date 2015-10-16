@@ -1,0 +1,30 @@
+{
+  "name": "neighbourhood",
+  "version": "1.0.0",
+  "description": "A neighbourhood of connected storage nodes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SamM/neighbourhood.git"
+  },
+  "keywords": [
+    "node",
+    "connected",
+    "database"
+  ],
+  "author": "Sam Mulqueen <sammulqueen.nz@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamM/neighbourhood/issues"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
+  },
+  "dependencies": {
+    "mongodb": "^2.0.45"
+  }
+}
