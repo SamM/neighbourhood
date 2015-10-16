@@ -4,7 +4,7 @@ function JobQueue(){
 	
 	function next(){
 		if(queue.length > 0){
-			queue[0].apply(self, [].splice.call(arguments));
+			queue[0].apply(self, [].splice.call(arguments,0));
 		}
 	}
 	
@@ -18,7 +18,7 @@ function JobQueue(){
 	
 	this.done = function(){
 		queue.shift();
-		next.apply(self, [].splice.call(arguments));
+		next.apply(self, [].splice.call(arguments,0));
 		return self;
 	};
 	
