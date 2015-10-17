@@ -1,57 +1,53 @@
 // Testing JobQueue to make chainable module API with async functions
-var JobQueue = require("./jobqueue");
+var WorkQueue = require("./workqueue");
 
 function Testing(){
-    var queue = new JobQueue();
+    var work = new WorkQueue();
     var self = this;
-    this.state = {
+    work.state = {
         time: 0
     };
     
     this.onesec = function(){
-        function fn(state){
+        function job(done, state){
             console.log("Wait 1 second");
             state.time+=1;
-            setTimeout(queue.done.bind(queue, state), 1000);
+            setTimeout(done, 1000);
         }
-        queue.add(fn, self.state);
+        work.append(job);
         return self;
     }
     
     this.nsecs = function(n){
-        function fn(state){
+        function job(done, state){
             console.log("Wait "+n+" seconds");
             state.time+=n;
-            setTimeout(queue.done.bind(queue, state), n*1000);
+            setTimeout(done, n*1000);
         }
-        queue.add(fn, self.state);
+        work.append(job);
         return self;
     }
     
     this.logtime = function(){
-        function fn(state){
+        function job(done, state){
             console.log("state.time = "+state.time);
-            queue.done(state);
+            done();
         }
-        queue.add(fn, self.state);
+        work.append(job);
         return self;
     }
     
-    this.logselftime = function(){
-        function fn(state){
-            console.log("self.state.time = "+self.state.time);
-            queue.done(state);
+    this.logworktime = function(){
+        function job(done, state){
+            console.log("work.state.time = "+work.state.time);
+            done();
         }
-        queue.add(fn, self.state);
+        work.append(job);
         return self;
     }
     
-    this.task = function(task){
-        function fn(state){ 
-            task.call(self, state);
-            queue.done(state); 
-        }
-        queue.add(fn, self.state);
+    this.task = function(job){
+        work.append(job);
         return self;
     }
 }
@@ -59,14 +55,16 @@ function Testing(){
 var test = new Testing();
 test.onesec()
     .nsecs(3)
-    .task(function(state){ 
+    .task(function(done, state){ 
         state.hello = "world";
+        done();
     })
     .onesec()
     .logtime()
-    .logselftime()
-    .task(function(state){ 
+    .logworktime()
+    .task(function(done, state){ 
         console.log("state.hello = "+state.hello);
+        done();
     });
 
 module.exports = Testing;
